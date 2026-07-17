@@ -1,0 +1,145 @@
+.sidebar{
+
+    position:fixed;
+
+    left:0;
+
+    top:0;
+
+    width:260px;
+
+    height:100vh;
+
+    background:#1e293b;
+
+    color:white;
+
+    overflow-y:auto;
+
+    box-shadow:3px 0 10px rgba(0,0,0,.1);
+
+}
+
+.logo{
+
+    padding:25px;
+
+    border-bottom:1px solid rgba(255,255,255,.1);
+
+}
+
+.logo h3{
+
+    margin:0;
+
+    font-weight:700;
+
+}
+
+.logo small{
+
+    color:#cbd5e1;
+
+}
+
+.menu-link,
+
+.submenu,
+
+.logout{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    color:white;
+
+    text-decoration:none;
+
+    padding:14px 20px;
+
+    transition:.3s;
+
+}
+
+.menu-link:hover,
+
+.submenu:hover,
+
+.logout:hover{
+
+    background:#334155;
+
+}
+
+.menu-link.active,
+
+.submenu.active{
+
+    background:#2563eb;
+
+}
+
+.menu-group{
+
+    padding:15px 20px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    color:#cbd5e1;
+
+}
+
+.menu-group div{
+
+    display:flex;
+
+    gap:10px;
+
+    align-items:center;
+
+}
+
+.submenu{
+
+    padding-left:45px;
+
+    animation:slide .25s ease;
+
+}
+
+.logout{
+
+    margin-top:25px;
+
+    color:#f87171;
+
+}
+
+@keyframes slide{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(-8px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
