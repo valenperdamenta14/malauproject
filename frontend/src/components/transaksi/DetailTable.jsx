@@ -6,100 +6,182 @@ const DetailTable = ({ detail }) => {
     );
 
     return (
-        <>
-            <table className="table table-bordered table-hover">
 
-                <thead className="table-dark">
+        <div className="card shadow-sm border-0 mt-4">
 
-                    <tr>
+            <div className="card-header bg-light">
 
-                        <th width="60">No</th>
+                <h6 className="mb-0">
 
-                        <th>Barang</th>
+                    <i className="bi bi-cart-check me-2"></i>
 
-                        <th width="150">Harga</th>
+                    Detail Booking
 
-                        <th width="80">Qty</th>
+                </h6>
 
-                        <th width="170">Subtotal</th>
+            </div>
 
-                    </tr>
+            <div className="card-body p-0">
 
-                </thead>
+                <table className="table table-hover align-middle mb-0">
 
-                <tbody>
+                    <thead className="table-dark">
 
-                    {
-                        detail.length > 0 ?
+                        <tr>
 
-                            detail.map((item, index) => (
+                            <th width="60">
 
-                                <tr key={index}>
+                                No
 
-                                    <td>{index + 1}</td>
+                            </th>
 
-                                    <td>{item.nama_barang}</td>
+                            <th>
 
-                                    <td>
+                                Barang
 
-                                        Rp {Number(item.harga).toLocaleString("id-ID")}
+                            </th>
 
-                                    </td>
+                            <th width="160">
 
-                                    <td>
+                                Harga
 
-                                        {item.qty}
+                            </th>
 
-                                    </td>
+                            <th width="100">
 
-                                    <td>
+                                Qty
 
-                                        Rp {Number(item.subtotal).toLocaleString("id-ID")}
+                            </th>
+
+                            <th width="180">
+
+                                Subtotal
+
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {
+
+                            detail.length > 0 ?
+
+                                detail.map((item, index) => (
+
+                                    <tr key={index}>
+
+                                        <td>
+
+                                            {index + 1}
+
+                                        </td>
+
+                                        <td>
+
+                                            <strong>
+
+                                                {item.nama_barang}
+
+                                            </strong>
+
+                                        </td>
+
+                                        <td>
+
+                                            Rp {Number(item.harga).toLocaleString("id-ID")}
+
+                                        </td>
+
+                                        <td>
+
+                                            <span className="badge bg-primary">
+
+                                                {item.qty}
+
+                                            </span>
+
+                                        </td>
+
+                                        <td>
+
+                                            <strong>
+
+                                                Rp {Number(item.subtotal).toLocaleString("id-ID")}
+
+                                            </strong>
+
+                                        </td>
+
+                                    </tr>
+
+                                ))
+
+                            :
+
+                                <tr>
+
+                                    <td
+                                        colSpan="5"
+                                        className="text-center py-5 text-muted"
+                                    >
+
+                                        <i
+                                            className="bi bi-cart-x"
+                                            style={{
+                                                fontSize: "50px",
+                                                display: "block",
+                                                marginBottom: "10px"
+                                            }}
+                                        ></i>
+
+                                        Belum ada detail transaksi.
 
                                     </td>
 
                                 </tr>
 
-                            ))
+                        }
 
-                            :
+                    </tbody>
 
-                            <tr>
-
-                                <td
-                                    colSpan="5"
-                                    className="text-center"
-                                >
-
-                                    Belum ada data
-
-                                </td>
-
-                            </tr>
-
-                    }
-
-                </tbody>
-
-            </table>
-
-            <div className="text-end">
-
-                <h3>
-
-                    Total :
-
-                    <span className="text-primary ms-2">
-
-                        Rp {total.toLocaleString("id-ID")}
-
-                    </span>
-
-                </h3>
+                </table>
 
             </div>
 
-        </>
+            <div className="card-footer bg-white">
+
+                <div className="d-flex justify-content-end">
+
+                    <div
+                        className="text-end"
+                        style={{
+                            minWidth: "250px"
+                        }}
+                    >
+
+                        <small className="text-muted">
+
+                            Total Pembayaran
+
+                        </small>
+
+                        <h3 className="fw-bold text-success mt-2">
+
+                            Rp {total.toLocaleString("id-ID")}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     );
 
 };

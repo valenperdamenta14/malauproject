@@ -28,44 +28,111 @@ const FormBooking = ({
 
     }, []);
 
+    useEffect(() => {
+
+        setBooking(prev => ({
+            ...prev,
+            detail
+        }));
+
+    }, [detail]);
+
     const loadBarang = async () => {
 
-        const response = await barangService.getAll();
+        try {
 
-        setBarang(response.data.data);
+            const response = await barangService.getAll();
+
+            setBarang(response.data.data);
+
+        } catch (err) {
+
+            console.log(err);
+
+        }
 
     };
 
     const loadPelanggan = async () => {
 
-        const response = await pelangganService.getAll();
+        try {
 
-        setPelanggan(response.data.data);
+            const response = await pelangganService.getAll();
+
+            setPelanggan(response.data.data);
+
+        } catch (err) {
+
+            console.log(err);
+
+        }
 
     };
 
-    const barangDipilih = barang.find(
-        item => item.id == selectedBarang
-    );
+    const barangDipilih =
+        barang.find(item => item.id == selectedBarang);
 
     const tambahBarang = () => {
 
         if (!barangDipilih) return;
 
-        const subtotal =
-            Number(barangDipilih.harga) *
-            Number(qty);
+        const sudahAda =
+            detail.find(item => item.barang_id == barangDipilih.id);
 
-        setDetail([
-            ...detail,
-            {
-                barang_id: barangDipilih.id,
-                nama_barang: barangDipilih.nama_barang,
-                harga: barangDipilih.harga,
-                qty,
-                subtotal
-            }
-        ]);
+        if (sudahAda) {
+
+            const update = detail.map(item => {
+
+                if (item.barang_id == barangDipilih.id) {
+
+                    const qtyBaru =
+                        Number(item.qty) + Number(qty);
+
+                    return {
+
+                        ...item,
+
+                        qty: qtyBaru,
+
+                        subtotal:
+                            qtyBaru *
+                            Number(item.harga)
+
+                    };
+
+                }
+
+                return item;
+
+            });
+
+            setDetail(update);
+
+        } else {
+
+            setDetail([
+
+                ...detail,
+
+                {
+
+                    barang_id: barangDipilih.id,
+
+                    nama_barang: barangDipilih.nama_barang,
+
+                    harga: barangDipilih.harga,
+
+                    qty: Number(qty),
+
+                    subtotal:
+                        Number(barangDipilih.harga) *
+                        Number(qty)
+
+                }
+
+            ]);
+
+        }
 
         setSelectedBarang("");
 
@@ -73,142 +140,251 @@ const FormBooking = ({
 
     };
 
-    useEffect(() => {
-
-        setBooking({
-            ...booking,
-            detail
-        });
-
-    }, [detail]);
-
     return (
+
         <>
-            <div className="mb-3">
+
+            <div className="row">
+
+                <div className="col-md-4 mb-3">
+
+                    <label className="form-label">
+
+                        Kode Booking
+
+                    </label>
+
+                    <input
+                        className="form-control"
+                        value={booking.kode_booking}
+                        disabled
+                    />
+
+                </div>
+
+                <div className="col-md-4 mb-3">
+
+                    <label className="form-label">
+
+                        Tanggal Booking
+
+                    </label>
+
+                    <input
+                        type="date"
+                        className="form-control"
+                        value={booking.tanggal_booking}
+                        onChange={(e)=>
+                            setBooking({
+                                ...booking,
+                                tanggal_booking:e.target.value
+                            })
+                        }
+                    />
+
+                </div>
+
+                <div className="col-md-4 mb-3">
+
+                    <label className="form-label">
+
+                        Status
+
+                    </label>
+
+                    <select
+                        className="form-select"
+                        value={booking.status}
+                        onChange={(e)=>
+                            setBooking({
+                                ...booking,
+                                status:e.target.value
+                            })
+                        }
+                    >
+
+                        <option>Pending</option>
+
+                        <option>Diproses</option>
+
+                        <option>Selesai</option>
+
+                        <option>Dibatalkan</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div className="mb-4">
+
                 <label className="form-label">
+
                     Pelanggan
+
                 </label>
 
                 <select
                     className="form-select"
                     value={booking.pelanggan_id}
-                    onChange={(e)=>setBooking({
-                        ...booking,
-                        pelanggan_id:e.target.value
-                    })}
+                    onChange={(e)=>
+                        setBooking({
+                            ...booking,
+                            pelanggan_id:e.target.value
+                        })
+                    }
                 >
 
                     <option value="">
+
                         Pilih Pelanggan
+
                     </option>
-                        {
-                            pelanggan.map(item=>(
+
+                    {
+
+                        pelanggan.map(item=>(
+
                             <option
                                 key={item.id}
                                 value={item.id}
                             >
-                        {item.nama}
-                    </option>
-                    ))
+
+                                {item.nama}
+
+                            </option>
+
+                        ))
+
                     }
+
                 </select>
 
             </div>
 
+            <hr />
+
+            <h5 className="mb-3">
+
+                Tambah Barang
+
+            </h5>
+
             <div className="row">
+
                 <div className="col-md-5">
-                    <label>
+
+                    <label className="form-label">
+
                         Barang
+
                     </label>
 
                     <select
                         className="form-select"
                         value={selectedBarang}
-                        onChange={(e)=>setSelectedBarang(e.target.value)}
+                        onChange={(e)=>
+                            setSelectedBarang(e.target.value)
+                        }
                     >
 
                         <option value="">
+
                             Pilih Barang
+
                         </option>
 
                         {
+
                             barang.map(item=>(
-                            <option
-                                key={item.id}
-                                value={item.id}
-                            >
-                                {item.nama_barang}
-                            </option>
+
+                                <option
+                                    key={item.id}
+                                    value={item.id}
+                                >
+
+                                    {item.nama_barang}
+
+                                </option>
+
                             ))
+
                         }
+
                     </select>
+
                 </div>
 
                 <div className="col-md-3">
-                    <label>
+
+                    <label className="form-label">
+
                         Harga
+
                     </label>
 
                     <input
                         className="form-control"
-                        value={
-                        barangDipilih
-                        ?
-                        Number(barangDipilih.harga).toLocaleString("id-ID")
-                        :
-                        ""
-                        }
-
                         disabled
-
+                        value={
+                            barangDipilih
+                            ?
+                            Number(barangDipilih.harga)
+                            .toLocaleString("id-ID")
+                            :
+                            ""
+                        }
                     />
 
                 </div>
 
                 <div className="col-md-2">
 
-                    <label>
+                    <label className="form-label">
+
                         Qty
+
                     </label>
 
                     <input
                         type="number"
                         className="form-control"
                         value={qty}
-                        onChange={(e)=>setQty(e.target.value)}
+                        onChange={(e)=>
+                            setQty(e.target.value)
+                        }
                     />
+
                 </div>
 
                 <div className="col-md-2 d-flex align-items-end">
+
                     <button
-                        className="btn btn-primary w-100"
                         type="button"
+                        className="btn btn-primary w-100"
                         onClick={tambahBarang}
                     >
+
+                        <i className="bi bi-plus-circle me-2"></i>
+
                         Tambah
+
                     </button>
+
                 </div>
 
-                <BarangTable
-                    detail={detail}
-                    setDetail={setDetail}
-                />
-
-                <h4 className="text-end mt-3">
-                    Total :
-                    Rp {
-                    detail
-                    .reduce(
-                    (total,item)=>
-                    total+Number(item.subtotal),
-                    0
-                    )
-                    .toLocaleString("id-ID")
-                    }
-                </h4>
             </div>
+
+            <BarangTable
+                detail={detail}
+                setDetail={setDetail}
+            />
+
         </>
-    )
+
+    );
+
 };
 
 export default FormBooking;

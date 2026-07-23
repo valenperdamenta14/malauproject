@@ -1,92 +1,251 @@
+import Swal from "sweetalert2";
+
 const BarangTable = ({
     detail,
     setDetail
 }) => {
 
-    const hapus = (index) => {
+    const hapusBarang = (index) => {
 
-        const data = [...detail];
+        Swal.fire({
 
-        data.splice(index, 1);
+            title: "Hapus Barang?",
 
-        setDetail(data);
+            text: "Barang akan dihapus dari daftar booking.",
+
+            icon: "warning",
+
+            showCancelButton: true,
+
+            confirmButtonColor: "#dc3545",
+
+            cancelButtonColor: "#6c757d",
+
+            confirmButtonText: "Ya",
+
+            cancelButtonText: "Batal"
+
+        }).then((result) => {
+
+            if (!result.isConfirmed) return;
+
+            const data = [...detail];
+
+            data.splice(index, 1);
+
+            setDetail(data);
+
+        });
 
     };
 
+    const total = detail.reduce(
+
+        (sum, item) => sum + Number(item.subtotal),
+
+        0
+
+    );
+
     return (
 
-        <table className="table table-bordered mt-4">
+        <div className="mt-4">
 
-            <thead className="table-dark">
+            <div className="card border-0 shadow-sm">
 
-                <tr>
+                <div className="card-header bg-light">
 
-                    <th>No</th>
+                    <h6 className="mb-0">
 
-                    <th>Barang</th>
+                        <i className="bi bi-cart-check me-2"></i>
 
-                    <th>Harga</th>
+                        Daftar Barang Booking
 
-                    <th>Qty</th>
+                    </h6>
 
-                    <th>Subtotal</th>
+                </div>
 
-                    <th>Aksi</th>
+                <div className="card-body p-0">
 
-                </tr>
+                    <table className="table table-hover align-middle mb-0">
 
-            </thead>
+                        <thead className="table-dark">
 
-            <tbody>
+                            <tr>
 
-                {
-                    detail.map((item, index) => (
+                                <th width="60">
 
-                        <tr key={index}>
+                                    No
 
-                            <td>{index + 1}</td>
+                                </th>
 
-                            <td>{item.nama_barang}</td>
+                                <th>
 
-                            <td>
+                                    Barang
 
-                                Rp {Number(item.harga).toLocaleString("id-ID")}
+                                </th>
 
-                            </td>
+                                <th width="150">
 
-                            <td>
+                                    Harga
 
-                                {item.qty}
+                                </th>
 
-                            </td>
+                                <th width="100">
 
-                            <td>
+                                    Qty
 
-                                Rp {Number(item.subtotal).toLocaleString("id-ID")}
+                                </th>
 
-                            </td>
+                                <th width="180">
 
-                            <td>
+                                    Subtotal
 
-                                <button
-                                    className="btn btn-danger btn-sm"
-                                    onClick={() => hapus(index)}
-                                >
+                                </th>
 
-                                    Hapus
+                                <th width="80">
 
-                                </button>
+                                    Aksi
 
-                            </td>
+                                </th>
 
-                        </tr>
+                            </tr>
 
-                    ))
-                }
+                        </thead>
 
-            </tbody>
+                        <tbody>
 
-        </table>
+                            {
+
+                                detail.length > 0 ?
+
+                                    detail.map((item, index) => (
+
+                                        <tr key={index}>
+
+                                            <td>
+
+                                                {index + 1}
+
+                                            </td>
+
+                                            <td>
+
+                                                <strong>
+
+                                                    {item.nama_barang}
+
+                                                </strong>
+
+                                            </td>
+
+                                            <td>
+
+                                                Rp {Number(item.harga).toLocaleString("id-ID")}
+
+                                            </td>
+
+                                            <td>
+
+                                                <span className="badge bg-primary">
+
+                                                    {item.qty}
+
+                                                </span>
+
+                                            </td>
+
+                                            <td>
+
+                                                <strong>
+
+                                                    Rp {Number(item.subtotal).toLocaleString("id-ID")}
+
+                                                </strong>
+
+                                            </td>
+
+                                            <td>
+
+                                                <button
+                                                    className="btn btn-sm btn-danger"
+                                                    onClick={() => hapusBarang(index)}
+                                                >
+
+                                                    <i className="bi bi-trash"></i>
+
+                                                </button>
+
+                                            </td>
+
+                                        </tr>
+
+                                    ))
+
+                                    :
+
+                                    <tr>
+
+                                        <td
+                                            colSpan="6"
+                                            className="text-center py-5 text-muted"
+                                        >
+
+                                            <i
+                                                className="bi bi-cart-x"
+                                                style={{
+                                                    fontSize: "50px",
+                                                    display: "block",
+                                                    marginBottom: "10px"
+                                                }}
+                                            ></i>
+
+                                            Belum ada barang ditambahkan.
+
+                                        </td>
+
+                                    </tr>
+
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <div className="d-flex justify-content-end mt-4">
+
+                <div
+                    className="card border-primary shadow-sm"
+                    style={{
+                        minWidth: "300px"
+                    }}
+                >
+
+                    <div className="card-body text-end">
+
+                        <small className="text-muted">
+
+                            Total Booking
+
+                        </small>
+
+                        <h3 className="text-primary fw-bold mt-2">
+
+                            Rp {total.toLocaleString("id-ID")}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
 
     );
 

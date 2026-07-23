@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import transaksiService from "../../services/transaksiService";
-
 import DetailTable from "./DetailTable";
 
 const FormTransaksi = ({
@@ -21,37 +20,54 @@ const FormTransaksi = ({
 
     const loadBooking = async () => {
 
-        const response =
-            await transaksiService.getBooking();
+        try {
 
-        setBooking(response.data.data);
+            const response =
+                await transaksiService.getBooking();
+
+            setBooking(response.data.data);
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
 
     };
 
     const pilihBooking = async (id) => {
 
-        setTransaksi({
-            ...transaksi,
-            booking_id: id
-        });
+        try {
 
-        const response =
-            await transaksiService.getDetail(id);
+            const response =
+                await transaksiService.getDetail(id);
 
-        setDetail(response.data.data);
+            const data = response.data.data;
 
-        const total =
-            response.data.data.reduce(
-                (sum, item) =>
-                    sum + Number(item.subtotal),
-                0
-            );
+            setDetail(data);
 
-        setTransaksi(prev => ({
-            ...prev,
-            booking_id: id,
-            total
-        }));
+            const total =
+                data.reduce(
+                    (sum, item) =>
+                        sum + Number(item.subtotal),
+                    0
+                );
+
+            setTransaksi(prev => ({
+
+                ...prev,
+
+                booking_id: id,
+
+                total
+
+            }));
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
 
     };
 
@@ -59,179 +75,179 @@ const FormTransaksi = ({
 
         <>
 
-            <div className="mb-4">
+            <div className="row">
 
-                <label className="form-label">
+                <div className="col-md-6 mb-4">
 
-                    Booking
+                    <label className="form-label">
 
-                </label>
+                        Tanggal Transaksi
 
-                <select
+                    </label>
 
-                    className="form-select"
+                    <input
+                        type="date"
+                        className="form-control"
+                        value={transaksi.tanggal_transaksi}
+                        onChange={(e)=>
+                            setTransaksi({
+                                ...transaksi,
+                                tanggal_transaksi:e.target.value
+                            })
+                        }
+                    />
 
-                    value={transaksi.booking_id}
+                </div>
 
-                    onChange={(e)=>pilihBooking(e.target.value)}
+                <div className="col-md-6 mb-4">
 
-                >
+                    <label className="form-label">
 
-                    <option value="">
+                        Booking
 
-                        Pilih Booking
+                    </label>
 
-                    </option>
+                    <select
+                        className="form-select"
+                        value={transaksi.booking_id}
+                        onChange={(e)=>
+                            pilihBooking(e.target.value)
+                        }
+                    >
 
-                    {
+                        <option value="">
 
-                        booking.map(item=>(
-
-                        <option
-                            key={item.id}
-                            value={item.id}
-                        >
-
-                            {item.kode_booking} - {item.nama}
+                            Pilih Booking
 
                         </option>
 
-                        ))
+                        {
 
-                    }
+                            booking.map(item=>(
 
-                </select>
+                                <option
+                                    key={item.id}
+                                    value={item.id}
+                                >
+
+                                    {item.kode_booking} - {item.nama}
+
+                                </option>
+
+                            ))
+
+                        }
+
+                    </select>
+
+                </div>
 
             </div>
 
-
             <DetailTable
-
                 detail={detail}
-
             />
 
-            <div className="mt-4">
+            <div className="card border-0 shadow-sm mt-4">
 
-                <label className="form-label">
+                <div className="card-header bg-light">
 
-                Metode Pembayaran
+                    <strong>
 
-                </label>
+                        Metode Pembayaran
 
-                <div className="form-check">
-
-                <input
-
-                type="radio"
-
-                className="form-check-input"
-
-                name="metode"
-
-                value="Cash"
-
-                checked={transaksi.metode_pembayaran==="Cash"}
-
-                onChange={(e)=>
-
-                setTransaksi({
-
-                ...transaksi,
-
-                metode_pembayaran:e.target.value
-
-                })
-
-                }
-
-                />
-
-                <label className="form-check-label">
-
-                Cash
-
-                </label>
+                    </strong>
 
                 </div>
 
-                <div className="form-check">
+                <div className="card-body">
 
-                <input
+                    <div className="form-check mb-3">
 
-                type="radio"
+                        <input
+                            className="form-check-input"
+                            type="radio"
+                            value="Cash"
+                            name="metode"
+                            checked={
+                                transaksi.metode_pembayaran === "Cash"
+                            }
+                            onChange={(e)=>
+                                setTransaksi({
+                                    ...transaksi,
+                                    metode_pembayaran:e.target.value
+                                })
+                            }
+                        />
 
-                className="form-check-input"
+                        <label className="form-check-label">
 
-                name="metode"
+                            💵 Cash
 
-                value="Transfer"
+                        </label>
 
-                checked={transaksi.metode_pembayaran==="Transfer"}
+                    </div>
 
-                onChange={(e)=>
+                    <div className="form-check mb-3">
 
-                setTransaksi({
+                        <input
+                            className="form-check-input"
+                            type="radio"
+                            value="Transfer"
+                            name="metode"
+                            checked={
+                                transaksi.metode_pembayaran==="Transfer"
+                            }
+                            onChange={(e)=>
+                                setTransaksi({
+                                    ...transaksi,
+                                    metode_pembayaran:e.target.value
+                                })
+                            }
+                        />
 
-                ...transaksi,
+                        <label className="form-check-label">
 
-                metode_pembayaran:e.target.value
+                            🏦 Transfer Bank
 
-                })
+                        </label>
 
-                }
+                    </div>
 
-                />
+                    <div className="form-check">
 
-                <label className="form-check-label">
+                        <input
+                            className="form-check-input"
+                            type="radio"
+                            value="QRIS"
+                            name="metode"
+                            checked={
+                                transaksi.metode_pembayaran==="QRIS"
+                            }
+                            onChange={(e)=>
+                                setTransaksi({
+                                    ...transaksi,
+                                    metode_pembayaran:e.target.value
+                                })
+                            }
+                        />
 
-                Transfer
+                        <label className="form-check-label">
 
-                </label>
+                            📱 QRIS
+
+                        </label>
+
+                    </div>
 
                 </div>
 
-                <div className="form-check">
+            </div>
 
-                <input
+        </>
 
-                type="radio"
+    );
 
-                className="form-check-input"
+};
 
-                name="metode"
-
-                value="QRIS"
-
-                checked={transaksi.metode_pembayaran==="QRIS"}
-
-                onChange={(e)=>
-
-                setTransaksi({
-
-                ...transaksi,
-
-                metode_pembayaran:e.target.value
-
-                })
-
-                }
-
-                />
-
-                <label className="form-check-label">
-
-                QRIS
-
-                </label>
-
-                </div>
-
-                </div>
-
-                </>
-                );
-
-                };
-
-                export default FormTransaksi;
+export default FormTransaksi;

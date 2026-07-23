@@ -1,22 +1,22 @@
 import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
 
 const MainLayout = ({ children }) => {
   return (
-    <>
+    <div className="d-flex">
       <Sidebar />
 
       <main
         style={{
-          marginLeft: "260px",
-          padding: "30px",
-          background: "#f1f5f9",
+          marginLeft: "270px",
+          width: "calc(100% - 270px)",
           minHeight: "100vh",
+          background: "#f8fafc",
+          padding: "28px",
         }}
       >
         {children}
       </main>
-    </>
+    </div>
   );
 };
 

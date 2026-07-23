@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
 import MainLayout from "../../layouts/MainLayout";
 import bookingService from "../../services/bookingService";
+import BookingModal from "./BookingModal";
 
 const Booking = () => {
 
     const [booking, setBooking] = useState([]);
+
+    const [showModal, setShowModal] = useState(false);
+
+    const [mode, setMode] = useState("add");
+
+    const [selectedData, setSelectedData] = useState(null);
 
     useEffect(() => {
         loadBooking();
@@ -15,31 +21,113 @@ const Booking = () => {
 
     const loadBooking = async () => {
 
-        const response = await bookingService.getAll();
+        try {
 
-        setBooking(response.data.data);
+            const response = await bookingService.getAll();
+
+            setBooking(response.data.data);
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
 
     };
 
-    const hapus = async (id) => {
+    const openTambah = () => {
+
+        setMode("add");
+
+        setSelectedData(null);
+
+        setShowModal(true);
+
+    };
+
+    const openEdit = (item) => {
+
+        setMode("edit");
+
+        setSelectedData(item);
+
+        setShowModal(true);
+
+    };
+
+    const hapusBooking = async (id) => {
 
         const result = await Swal.fire({
-            title: "Hapus booking?",
+
+            title: "Hapus Booking?",
+
+            text: "Data booking akan dihapus.",
+
             icon: "warning",
-            showCancelButton: true
+
+            showCancelButton: true,
+
+            confirmButtonColor: "#dc3545",
+
+            cancelButtonColor: "#6c757d",
+
+            confirmButtonText: "Ya",
+
+            cancelButtonText: "Batal"
+
         });
 
-        if (result.isConfirmed) {
+        if (!result.isConfirmed) return;
+
+        try {
 
             await bookingService.delete(id);
 
-            Swal.fire(
-                "Berhasil",
-                "Booking berhasil dihapus",
-                "success"
-            );
+            Swal.fire({
+
+                icon: "success",
+
+                title: "Berhasil",
+
+                text: "Booking berhasil dihapus."
+
+            });
 
             loadBooking();
+
+        } catch (error) {
+
+            Swal.fire({
+
+                icon: "error",
+
+                title: "Gagal",
+
+                text:
+                    error.response?.data?.message ||
+                    "Terjadi kesalahan."
+
+            });
+
+        }
+
+    };
+
+    const badgeStatus = (status) => {
+
+        switch (status) {
+
+            case "Pending":
+                return "bg-warning text-dark";
+
+            case "Diproses":
+                return "bg-info";
+
+            case "Selesai":
+                return "bg-success";
+
+            default:
+                return "bg-danger";
 
         }
 
@@ -51,20 +139,32 @@ const Booking = () => {
 
             <div className="d-flex justify-content-between align-items-center mb-4">
 
-                <h3>
+                <div>
 
-                    Data Booking
+                    <h3 className="fw-bold mb-1">
 
-                </h3>
+                        Data Booking
 
-                <Link
+                    </h3>
+
+                    <small className="text-muted">
+
+                        Kelola seluruh data booking pelanggan.
+
+                    </small>
+
+                </div>
+
+                <button
                     className="btn btn-primary"
-                    to="/booking/tambah"
+                    onClick={openTambah}
                 >
 
-                    + Booking Baru
+                    <i className="bi bi-calendar-plus me-2"></i>
 
-                </Link>
+                    Booking Baru
+
+                </button>
 
             </div>
 
@@ -72,23 +172,47 @@ const Booking = () => {
 
                 <div className="card-body">
 
-                    <table className="table table-hover">
+                    <table className="table table-hover align-middle">
 
                         <thead className="table-dark">
 
                             <tr>
 
-                                <th>No</th>
+                                <th width="60">
 
-                                <th>Kode</th>
+                                    No
 
-                                <th>Pelanggan</th>
+                                </th>
 
-                                <th>Tanggal</th>
+                                <th>
 
-                                <th>Status</th>
+                                    Kode Booking
 
-                                <th>Aksi</th>
+                                </th>
+
+                                <th>
+
+                                    Pelanggan
+
+                                </th>
+
+                                <th>
+
+                                    Tanggal
+
+                                </th>
+
+                                <th width="120">
+
+                                    Status
+
+                                </th>
+
+                                <th width="180">
+
+                                    Aksi
+
+                                </th>
 
                             </tr>
 
@@ -97,50 +221,107 @@ const Booking = () => {
                         <tbody>
 
                             {
-                                booking.map((item, index) => (
 
-                                    <tr key={item.id}>
+                                booking.length > 0 ?
 
-                                        <td>{index + 1}</td>
+                                    booking.map((item, index) => (
 
-                                        <td>{item.kode_booking}</td>
+                                        <tr key={item.id}>
 
-                                        <td>{item.nama}</td>
+                                            <td>
 
-                                        <td>{item.tanggal_booking}</td>
+                                                {index + 1}
 
-                                        <td>
+                                            </td>
 
-                                            <span
-                                                className={`badge ${
-                                                    item.status === "Pending"
-                                                        ? "bg-warning text-dark"
-                                                        : item.status === "Diproses"
-                                                        ? "bg-info"
-                                                        : item.status === "Selesai"
-                                                        ? "bg-success"
-                                                        : "bg-danger"
-                                                }`}
-                                            >
-                                                {item.status}
-                                            </span>
+                                            <td>
 
-                                        </td>
+                                                <strong>
 
-                                        <td>
+                                                    {item.kode_booking}
 
-                                            <button
-                                                className="btn btn-danger btn-sm"
-                                                onClick={() => hapus(item.id)}
-                                            >
-                                                Hapus
-                                            </button>
+                                                </strong>
+
+                                            </td>
+
+                                            <td>
+
+                                                {item.nama}
+
+                                            </td>
+
+                                            <td>
+
+                                                {item.tanggal_booking}
+
+                                            </td>
+
+                                            <td>
+
+                                                <span
+                                                    className={`badge ${badgeStatus(item.status)}`}
+                                                >
+
+                                                    {item.status}
+
+                                                </span>
+
+                                            </td>
+
+                                            <td>
+
+                                                <button
+                                                    className="btn btn-warning btn-sm me-2"
+                                                    onClick={() => openEdit(item)}
+                                                >
+
+                                                    <i className="bi bi-pencil-square me-1"></i>
+
+                                                    Edit
+
+                                                </button>
+
+                                                <button
+                                                    className="btn btn-danger btn-sm"
+                                                    onClick={() => hapusBooking(item.id)}
+                                                >
+
+                                                    <i className="bi bi-trash me-1"></i>
+
+                                                    Hapus
+
+                                                </button>
+
+                                            </td>
+
+                                        </tr>
+
+                                    ))
+
+                                    :
+
+                                    <tr>
+
+                                        <td
+                                            colSpan="6"
+                                            className="text-center py-5 text-muted"
+                                        >
+
+                                            <i
+                                                className="bi bi-calendar-x"
+                                                style={{
+                                                    fontSize: "50px",
+                                                    display: "block",
+                                                    marginBottom: "10px"
+                                                }}
+                                            ></i>
+
+                                            Belum ada data booking.
 
                                         </td>
 
                                     </tr>
 
-                                ))
                             }
 
                         </tbody>
@@ -150,6 +331,14 @@ const Booking = () => {
                 </div>
 
             </div>
+
+            <BookingModal
+                show={showModal}
+                mode={mode}
+                selectedData={selectedData}
+                onClose={() => setShowModal(false)}
+                onSuccess={loadBooking}
+            />
 
         </MainLayout>
 

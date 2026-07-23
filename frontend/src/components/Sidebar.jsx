@@ -1,197 +1,247 @@
 import { useState } from "react";
-
-import { NavLink } from "react-router-dom";
-
+import { NavLink, useNavigate } from "react-router-dom";
 import {
-
     FaHome,
-
     FaBoxOpen,
-
     FaUsers,
-
     FaCalendarAlt,
-
     FaMoneyBillWave,
-
     FaChartBar,
-
     FaFolder,
-
     FaSignOutAlt,
-
     FaChevronDown,
-
-    FaChevronRight
-
+    FaChevronRight,
+    FaUserCircle
 } from "react-icons/fa";
 
+import Swal from "sweetalert2";
 import "./Sidebar.css";
 
 const Sidebar = () => {
+
+    const navigate = useNavigate();
 
     const [inputOpen, setInputOpen] = useState(true);
 
     const [prosesOpen, setProsesOpen] = useState(true);
 
+    const handleLogout = async () => {
+
+        const result = await Swal.fire({
+
+            title: "Logout?",
+
+            text: "Apakah Anda yakin ingin keluar dari sistem?",
+
+            icon: "question",
+
+            showCancelButton: true,
+
+            confirmButtonColor: "#dc3545",
+
+            cancelButtonColor: "#64748b",
+
+            confirmButtonText: "Ya, Logout",
+
+            cancelButtonText: "Batal"
+
+        });
+
+        if (!result.isConfirmed) return;
+
+        localStorage.removeItem("token");
+
+        navigate("/");
+
+    };
+
     return (
 
-        <aside className="sidebar">
+        <aside className="sidebar-modern">
+            <div className="sidebar-profile">
 
-            <div className="logo">
-
-                <h3>TOKO MALAU</h3>
-
-                <small>Sistem Informasi Booking</small>
-
-            </div>
-
-            <NavLink
-                to="/dashboard"
-                className="menu-link"
-            >
-
-                <FaHome />
-
-                Dashboard
-
-            </NavLink>
-
-            <div
-                className="menu-group"
-                onClick={() => setInputOpen(!inputOpen)}
-            >
+                <FaUserCircle className="profile-avatar" />
 
                 <div>
 
-                    <FaFolder />
+                    <h6 className="mb-0">Toko Malau</h6>
 
-                    Input Data
+                    <small className="text-success">
+
+                        ● Online
+
+                    </small>
 
                 </div>
 
-                {
-                    inputOpen ?
-
-                    <FaChevronDown />
-
-                    :
-
-                    <FaChevronRight />
-
-                }
-
             </div>
 
-            {
-                inputOpen &&
+            {/* Menu */}
 
-                <>
+            <div className="sidebar-menu">
+
+                <NavLink
+                    to="/dashboard"
+                    className={({ isActive }) =>
+                        isActive
+                            ? "menu-item active"
+                            : "menu-item"
+                    }
+                >
+
+                    <FaHome className="menu-icon" />
+
+                    <span>Dashboard</span>
+
+                </NavLink>
+
+                {/* Input Data */}
+
+                <button
+                    className="menu-group-btn"
+                    onClick={() => setInputOpen(!inputOpen)}
+                >
+
+                    <div className="menu-group-left">
+
+                        <FaFolder className="menu-icon" />
+
+                        <span>Input Data</span>
+
+                    </div>
+
+                    {
+                        inputOpen
+                            ? <FaChevronDown />
+                            : <FaChevronRight />
+                    }
+
+                </button>
+
+                <div className={`submenu-wrapper ${inputOpen ? "open" : ""}`}>
 
                     <NavLink
                         to="/barang"
-                        className="submenu"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "submenu-item active"
+                                : "submenu-item"
+                        }
                     >
 
-                        <FaBoxOpen />
+                        <FaBoxOpen className="menu-icon" />
 
-                        Data Barang
+                        <span>Data Barang</span>
 
                     </NavLink>
 
                     <NavLink
                         to="/pelanggan"
-                        className="submenu"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "submenu-item active"
+                                : "submenu-item"
+                        }
                     >
 
-                        <FaUsers />
+                        <FaUsers className="menu-icon" />
 
-                        Data Pelanggan
+                        <span>Data Pelanggan</span>
 
                     </NavLink>
 
-                </>
-
-            }
-
-            <div
-                className="menu-group"
-                onClick={() => setProsesOpen(!prosesOpen)}
-            >
-
-                <div>
-
-                    <FaMoneyBillWave />
-
-                    Proses
-
                 </div>
 
-                {
-                    prosesOpen ?
+                {/* Proses */}
 
-                    <FaChevronDown />
+                <button
+                    className="menu-group-btn"
+                    onClick={() => setProsesOpen(!prosesOpen)}
+                >
 
-                    :
+                    <div className="menu-group-left">
 
-                    <FaChevronRight />
+                        <FaMoneyBillWave className="menu-icon" />
 
-                }
+                        <span>Proses</span>
 
-            </div>
+                    </div>
 
-            {
-                prosesOpen &&
+                    {
+                        prosesOpen
+                            ? <FaChevronDown />
+                            : <FaChevronRight />
+                    }
 
-                <>
+                </button>
+
+                <div className={`submenu-wrapper ${prosesOpen ? "open" : ""}`}>
 
                     <NavLink
                         to="/booking"
-                        className="submenu"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "submenu-item active"
+                                : "submenu-item"
+                        }
                     >
 
-                        <FaCalendarAlt />
+                        <FaCalendarAlt className="menu-icon" />
 
-                        Booking
+                        <span>Booking</span>
 
                     </NavLink>
 
                     <NavLink
                         to="/transaksi"
-                        className="submenu"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "submenu-item active"
+                                : "submenu-item"
+                        }
                     >
 
-                        <FaMoneyBillWave />
+                        <FaMoneyBillWave className="menu-icon" />
 
-                        Transaksi
+                        <span>Transaksi</span>
 
                     </NavLink>
 
                     <NavLink
                         to="/laporan"
-                        className="submenu"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "submenu-item active"
+                                : "submenu-item"
+                        }
                     >
 
-                        <FaChartBar />
+                        <FaChartBar className="menu-icon" />
 
-                        Laporan
+                        <span>Laporan</span>
 
                     </NavLink>
 
-                </>
+                </div>
 
-            }
+            </div>
 
-            <NavLink
-                to="/logout"
-                className="logout"
-            >
+            {/* Logout */}
 
-                <FaSignOutAlt />
+            <div className="sidebar-footer">
 
-                Logout
+                <button
+                    className="logout-btn"
+                    onClick={handleLogout}
+                >
 
-            </NavLink>
+                    <FaSignOutAlt className="menu-icon" />
+
+                    <span>Logout</span>
+
+                </button>
+
+            </div>
 
         </aside>
 

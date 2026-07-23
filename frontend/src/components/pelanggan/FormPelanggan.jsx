@@ -2,23 +2,20 @@ const FormPelanggan = ({
     form,
     handleChange,
     handleSubmit,
-    title,
     buttonText,
     buttonColor,
-    navigate
+    isModal = false,
+    onClose
 }) => {
-    return (
-        <div className="card shadow-sm border-0">
-            <div className={`card-header ${buttonColor} text-white`}>
-                <h5 className="mb-0">
-                    {title}
-                </h5>
-            </div>
 
-            <div className="card-body">
+    return (
+        <>
+            <div className={isModal ? "modal-body-custom" : "card-body"}>
+
                 <form onSubmit={handleSubmit}>
 
                     <div className="mb-3">
+
                         <label className="form-label">
                             Nama Pelanggan
                         </label>
@@ -29,11 +26,14 @@ const FormPelanggan = ({
                             className="form-control"
                             value={form.nama}
                             onChange={handleChange}
+                            placeholder="Masukkan nama pelanggan..."
                             required
                         />
+
                     </div>
 
                     <div className="mb-3">
+
                         <label className="form-label">
                             Nomor HP
                         </label>
@@ -44,10 +44,13 @@ const FormPelanggan = ({
                             className="form-control"
                             value={form.no_hp}
                             onChange={handleChange}
+                            placeholder="08xxxxxxxxxx"
                         />
+
                     </div>
 
                     <div className="mb-4">
+
                         <label className="form-label">
                             Alamat
                         </label>
@@ -58,28 +61,48 @@ const FormPelanggan = ({
                             className="form-control"
                             value={form.alamat}
                             onChange={handleChange}
+                            placeholder="Masukkan alamat pelanggan..."
                         />
+
                     </div>
 
-                    <button
-                        type="submit"
-                        className={`btn ${buttonColor} me-2`}
-                    >
-                        {buttonText}
-                    </button>
+                    <div className="modal-footer-custom">
 
-                    <button
-                        type="button"
-                        className="btn btn-secondary"
-                        onClick={() => navigate("/pelanggan")}
-                    >
-                        Kembali
-                    </button>
+                        <button
+                            type="button"
+                            className="btn btn-outline-secondary"
+                            onClick={onClose}
+                        >
+                            <i className="bi bi-x-circle me-2"></i>
+
+                            Batal
+
+                        </button>
+
+                        <button
+                            type="submit"
+                            className={`btn ${buttonColor}`}
+                        >
+
+                            <i className={`bi ${
+                                buttonText === "Update"
+                                    ? "bi-check-circle"
+                                    : "bi-save"
+                            } me-2`}></i>
+
+                            {buttonText}
+
+                        </button>
+
+                    </div>
 
                 </form>
+
             </div>
-        </div>
+
+        </>
     );
+
 };
 
 export default FormPelanggan;

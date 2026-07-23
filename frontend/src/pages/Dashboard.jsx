@@ -22,10 +22,18 @@ const Dashboard = () => {
 
     const loadDashboard = async () => {
 
-        const response =
-            await dashboardService.getSummary();
+        try {
 
-        setData(response.data.data);
+            const response =
+                await dashboardService.getSummary();
+
+            setData(response.data.data);
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
 
     };
 
@@ -33,55 +41,66 @@ const Dashboard = () => {
 
         <MainLayout>
 
-            <h3 className="mb-4">
+            {/* Header */}
 
-                Dashboard
+            <div className="mb-4">
 
-            </h3>
+                <h2 className="fw-bold">
+
+                    Dashboard
+
+                </h2>
+
+                <p className="text-muted">
+
+                    Selamat datang di Sistem Booking Online.
+
+                </p>
+
+            </div>
+
+            {/* Statistik */}
 
             <div className="row">
 
-                <div className="col-md-3 mb-4">
+                <div className="col-lg-3 col-md-6 mb-4">
 
-                    <div className="card border-0 shadow-sm">
+                    <div
+                        className="card border-0 shadow-sm h-100"
+                        style={{
+                            borderRadius: "15px"
+                        }}
+                    >
 
-                        <div className="card-body">
+                        <div className="card-body d-flex justify-content-between align-items-center">
 
-                            <h6>Total Barang</h6>
+                            <div>
 
-                            <h2>{data.barang}</h2>
+                                <small className="text-muted">
 
-                        </div>
+                                    Total Barang
 
-                    </div>
+                                </small>
 
-                </div>
+                                <h2 className="fw-bold mb-0">
 
-                <div className="col-md-3 mb-4">
+                                    {data.barang}
 
-                    <div className="card border-0 shadow-sm">
+                                </h2>
 
-                        <div className="card-body">
+                            </div>
 
-                            <h6>Total Pelanggan</h6>
+                            <div
+                                className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                style={{
+                                    width: "60px",
+                                    height: "60px"
+                                }}
+                            >
 
-                            <h2>{data.pelanggan}</h2>
+                                <i className="bi bi-box-seam fs-3"></i>
 
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div className="col-md-3 mb-4">
-
-                    <div className="card border-0 shadow-sm">
-
-                        <div className="card-body">
-
-                            <h6>Total Booking</h6>
-
-                            <h2>{data.booking}</h2>
+                            </div>
 
                         </div>
 
@@ -89,19 +108,134 @@ const Dashboard = () => {
 
                 </div>
 
-                <div className="col-md-3 mb-4">
+                <div className="col-lg-3 col-md-6 mb-4">
 
-                    <div className="card border-0 shadow-sm">
+                    <div
+                        className="card border-0 shadow-sm h-100"
+                        style={{
+                            borderRadius: "15px"
+                        }}
+                    >
 
-                        <div className="card-body">
+                        <div className="card-body d-flex justify-content-between align-items-center">
 
-                            <h6>Pendapatan</h6>
+                            <div>
 
-                            <h4>
+                                <small className="text-muted">
 
-                                Rp {Number(data.pendapatan).toLocaleString("id-ID")}
+                                    Total Pelanggan
 
-                            </h4>
+                                </small>
+
+                                <h2 className="fw-bold mb-0">
+
+                                    {data.pelanggan}
+
+                                </h2>
+
+                            </div>
+
+                            <div
+                                className="bg-success text-white rounded-circle d-flex align-items-center justify-content-center"
+                                style={{
+                                    width: "60px",
+                                    height: "60px"
+                                }}
+                            >
+
+                                <i className="bi bi-people-fill fs-3"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div className="col-lg-3 col-md-6 mb-4">
+
+                    <div
+                        className="card border-0 shadow-sm h-100"
+                        style={{
+                            borderRadius: "15px"
+                        }}
+                    >
+
+                        <div className="card-body d-flex justify-content-between align-items-center">
+
+                            <div>
+
+                                <small className="text-muted">
+
+                                    Total Booking
+
+                                </small>
+
+                                <h2 className="fw-bold mb-0">
+
+                                    {data.booking}
+
+                                </h2>
+
+                            </div>
+
+                            <div
+                                className="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center"
+                                style={{
+                                    width: "60px",
+                                    height: "60px"
+                                }}
+                            >
+
+                                <i className="bi bi-calendar-check fs-3"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div className="col-lg-3 col-md-6 mb-4">
+
+                    <div
+                        className="card border-0 shadow-sm h-100"
+                        style={{
+                            borderRadius: "15px"
+                        }}
+                    >
+
+                        <div className="card-body d-flex justify-content-between align-items-center">
+
+                            <div>
+
+                                <small className="text-muted">
+
+                                    Pendapatan
+
+                                </small>
+
+                                <h5 className="fw-bold text-success mb-0">
+
+                                    Rp {Number(data.pendapatan).toLocaleString("id-ID")}
+
+                                </h5>
+
+                            </div>
+
+                            <div
+                                className="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center"
+                                style={{
+                                    width: "60px",
+                                    height: "60px"
+                                }}
+                            >
+
+                                <i className="bi bi-cash-stack fs-3"></i>
+
+                            </div>
 
                         </div>
 
@@ -111,21 +245,35 @@ const Dashboard = () => {
 
             </div>
 
+            {/* Status Booking */}
+
             <div className="row">
 
-                <div className="col-md-6">
+                <div className="col-lg-6 mb-4">
 
-                    <div className="card shadow-sm border-0">
+                    <div
+                        className="card border-0 shadow-sm h-100"
+                        style={{
+                            borderRadius: "15px"
+                        }}
+                    >
 
-                        <div className="card-body">
+                        <div className="card-body text-center">
 
-                            <h5>
+                            <i
+                                className="bi bi-hourglass-split text-warning"
+                                style={{
+                                    fontSize: "55px"
+                                }}
+                            ></i>
+
+                            <h5 className="mt-3">
 
                                 Booking Pending
 
                             </h5>
 
-                            <h1 className="text-warning">
+                            <h1 className="fw-bold text-warning">
 
                                 {data.pending}
 
@@ -137,19 +285,31 @@ const Dashboard = () => {
 
                 </div>
 
-                <div className="col-md-6">
+                <div className="col-lg-6 mb-4">
 
-                    <div className="card shadow-sm border-0">
+                    <div
+                        className="card border-0 shadow-sm h-100"
+                        style={{
+                            borderRadius: "15px"
+                        }}
+                    >
 
-                        <div className="card-body">
+                        <div className="card-body text-center">
 
-                            <h5>
+                            <i
+                                className="bi bi-check-circle-fill text-success"
+                                style={{
+                                    fontSize: "55px"
+                                }}
+                            ></i>
+
+                            <h5 className="mt-3">
 
                                 Booking Selesai
 
                             </h5>
 
-                            <h1 className="text-success">
+                            <h1 className="fw-bold text-success">
 
                                 {data.selesai}
 
@@ -158,6 +318,31 @@ const Dashboard = () => {
                         </div>
 
                     </div>
+
+                </div>
+
+            </div>
+
+            {/* Informasi */}
+
+            <div className="card border-0 shadow-sm">
+
+                <div className="card-body">
+
+                    <h5 className="fw-bold mb-3">
+
+                        Ringkasan Sistem
+
+                    </h5>
+
+                    <p className="text-muted mb-0">
+
+                        Dashboard ini menampilkan informasi utama mengenai data barang,
+                        pelanggan, booking, transaksi serta pendapatan yang diperoleh.
+                        Gunakan menu di sebelah kiri untuk mengelola seluruh data
+                        pada sistem Booking Online.
+
+                    </p>
 
                 </div>
 
